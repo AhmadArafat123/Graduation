@@ -1,6 +1,7 @@
 package com.test.testpro.model;
 
 import lombok.*;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 @Getter
 @Setter
 @RequiredArgsConstructor
+@Document(indexName = "provider")
 public class Provider {
     @Id
     @GeneratedValue

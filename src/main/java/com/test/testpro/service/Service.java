@@ -1,7 +1,5 @@
 package com.test.testpro.service;
 
-import com.test.testpro.model.Customer;
-import com.test.testpro.model.Provider;
 import com.test.testpro.model.ServiceModel;
 import com.test.testpro.repository.ServiceRepository;
 import org.springframework.retry.annotation.EnableRetry;
@@ -14,7 +12,6 @@ import java.util.Optional;
 @org.springframework.stereotype.Service
 @EnableTransactionManagement
 @EnableRetry
-
 @Transactional(isolation = Isolation.SERIALIZABLE)
 public class Service {
 

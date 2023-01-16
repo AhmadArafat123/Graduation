@@ -28,11 +28,9 @@ import java.util.Optional;
 public class CustomerService {
 
     private final CustomerRepository userRepository;
-    private final ElasticsearchOperations elasticsearchOperations;
 
-    public CustomerService(CustomerRepository userRepository, ElasticsearchOperations elasticsearchOperations) {
+    public CustomerService(CustomerRepository userRepository) {
         this.userRepository = userRepository;
-        this.elasticsearchOperations = elasticsearchOperations;
     }
     public Optional<Customer> getUser(long id){
         return userRepository.findById(id);
@@ -65,32 +63,7 @@ public class CustomerService {
         }
         return "User not found";
     }
-    //////////////////////////////////////////////
-    public List<String> fetchSuggestions(String query) {
-        query=query.toLowerCase(Locale.ROOT);
 
-        QueryBuilder queryBuilder = QueryBuilders
-                .wildcardQuery("name", query+"*");
-        System.out.println("QueryBul "+queryBuilder);
-
-        Query searchQuery = new NativeSearchQueryBuilder()
-                .withFilter(queryBuilder)
-                .withPageable(PageRequest.of(0, 5))
-                .build();
-        System.out.println("sear "+searchQuery);
-
-        SearchHits<Customer> searchSuggestions =
-                elasticsearchOperations.search(searchQuery,
-                        Customer.class,
-                        IndexCoordinates.of("user"));
-        System.out.println("searSuq "+searchSuggestions);
-
-        List<String> suggestions = new ArrayList<>();
-
-        searchSuggestions.getSearchHits().forEach(searchHit-> suggestions.add(searchHit.getContent().getUserName()));
-        System.out.println(suggestions);
-        return suggestions;
-    }
 }
 
 

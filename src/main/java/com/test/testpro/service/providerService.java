@@ -8,20 +8,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Optional;
 
 @Service
 @EnableTransactionManagement
 @EnableRetry
-
 @Transactional(isolation = Isolation.SERIALIZABLE)
 public class providerService {
 
         private final ProviderRepository providerRepository;
 
-    public providerService(ProviderRepository serviceProviderrRepository) {
-        this.providerRepository = serviceProviderrRepository;
+    public providerService(ProviderRepository serviceProviderRepository) {
+        this.providerRepository = serviceProviderRepository;
+    }
+
+    public void save(Provider provider) {
+        providerRepository.save(provider);
     }
 
     public Optional<Provider> getProvider(long id){
@@ -42,6 +44,7 @@ public class providerService {
         providerRepository.save(provider);
         return provider;
     }
+
 
     public String deleteProvider(long id) {
         Optional<Provider> provider=providerRepository.findById(id);

@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.sql.Time;
+import java.time.LocalTime;
 
 @Entity
 @NoArgsConstructor
@@ -24,8 +25,10 @@ public class ServiceModel {
     private double minPrice;
     @NonNull
     private double maxPrice;
+
     @NonNull
-    private Time time;
+    private String time;
+
     @NonNull
     private String location;
     @NonNull
