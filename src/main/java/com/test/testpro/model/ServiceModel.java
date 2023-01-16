@@ -17,26 +17,29 @@ public class ServiceModel {
     @Id
     @GeneratedValue
     private Long id;
-
-
-
     @NonNull
     private String userName;
+    @NonNull
+    private String serviceName;
+    @NonNull
+    private String description;
     @NonNull
     private String type;
     @NonNull
     private boolean poke;
-
+    @NonNull
+    private double price;
+    @NonNull
+    private float longtid;
+    @NonNull
+    private float lati;
+    @NonNull
+    private String quality;
 
     @NonNull
     private String time;
 
-    @NonNull
-    private String location;
-    @NonNull
-    private double price;
-    @NonNull
-    private String quality;
+
 
     @JsonIgnore
     @ManyToOne

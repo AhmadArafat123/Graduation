@@ -20,15 +20,22 @@ public class ServiceController {
         return service.getAllServicesByName(userName);
     }
 
-    @GetMapping(value = "/getAllServices")
+    @GetMapping(value = "/getAllServices/customer")
     public List<ServiceModel> getAllService() {
         return service.getAllServices();
     }
+    @GetMapping(value = "/getAllServices/provider")
+    public List<ServiceModel> getAllServicesForProvider() {
+        return service.getAllServicesForProvider();
+    }
+
 
     @PostMapping(value = "/createService")
     public ServiceModel createService(@RequestBody ServiceModel serviceModel,@RequestParam String userNanme){
         return service.createService(serviceModel,userNanme);
     }
+
+
 
 
     @DeleteMapping(value = "/deleteService/{id}")

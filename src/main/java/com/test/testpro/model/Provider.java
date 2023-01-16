@@ -33,10 +33,12 @@ public class Provider {
     @NonNull
     private String typeOfService;
     @NonNull
-    private int quality;
+        private String quality;
     ///////////////////////////////
     @NonNull
     private String phoneNum;
+    @NonNull
+    private String password;
 
     @JsonIgnore
     @OneToMany(mappedBy="provider")

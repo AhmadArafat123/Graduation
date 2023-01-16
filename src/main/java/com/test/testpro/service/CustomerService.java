@@ -1,5 +1,6 @@
 package com.test.testpro.service;
 
+import com.test.testpro.exception.ApiRequestException;
 import com.test.testpro.model.Customer;
 import com.test.testpro.repository.CustomerRepository;
 import org.springframework.retry.annotation.EnableRetry;
@@ -23,11 +24,12 @@ public class CustomerService {
     }
     public Optional<Customer> getUser(String email,String password){
        Optional<Customer> c=  userRepository.findByEmail(email);
-       if(c.isPresent()){
-           if(password.equalsIgnoreCase(c.get().getPassword()))
-               return c;
+       if(!c.isPresent() || !password.equalsIgnoreCase(c.get().getPassword())){
+            throw new ApiRequestException("Error email or password is wrong");
        }
-       return c;
+
+           return c;
+
     }
 
     public void save(Customer user) {

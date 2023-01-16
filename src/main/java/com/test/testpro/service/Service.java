@@ -58,13 +58,13 @@ public class Service {
             System.out.println(userName + " :  exits ");
             c1.getServiceModels().add(service);
             service.setCustomer(c1);
-            System.out.println("hhhh");
     }
     else if (pr.isPresent()){
         Provider p1=pr.get();
         System.out.println(userName + " :  exits ");
         p1.getServiceModels().add(service);
-//        service.setProvider(p1);
+        service.setQuality(p1.getQuality());
+        service.setProvider(p1);
     }
     else System.out.println(userName + " : doesnt exits ");
     serviceRepository.save(service);
@@ -81,12 +81,16 @@ public class Service {
     }
 
     public List<ServiceModel> getAllServices() {
-        return serviceRepository.findAllByPoke(Boolean.FALSE);
+        return serviceRepository.findAllByCustomer(null);
     }
 
 
     public Poke tryTopokeService(Poke poke) {
         return pokeRepository.save(poke);
+    }
+
+    public List<ServiceModel> getAllServicesForProvider() {
+        return serviceRepository.findAllByProvider(null);
     }
 }
 
