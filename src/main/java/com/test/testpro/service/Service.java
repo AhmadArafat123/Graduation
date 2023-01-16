@@ -1,12 +1,19 @@
 package com.test.testpro.service;
 
+import com.test.testpro.model.Customer;
+import com.test.testpro.model.Poke;
+import com.test.testpro.model.Provider;
 import com.test.testpro.model.ServiceModel;
+import com.test.testpro.repository.CustomerRepository;
+import com.test.testpro.repository.PokeRepository;
+import com.test.testpro.repository.ProviderRepository;
 import com.test.testpro.repository.ServiceRepository;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @org.springframework.stereotype.Service
@@ -16,12 +23,19 @@ import java.util.Optional;
 public class Service {
 
         private final ServiceRepository serviceRepository;
+    private final CustomerRepository customerRepository;
+    private final ProviderRepository providerRepository;
+    private final PokeRepository pokeRepository;
 
-    public Service(ServiceRepository serviceRepository) {
+    public Service(ServiceRepository serviceRepository, CustomerRepository customerRepository, ProviderRepository providerRepository, PokeRepository pokeRepository) {
         this.serviceRepository = serviceRepository;
+        this.customerRepository = customerRepository;
+        this.providerRepository = providerRepository;
+
+        this.pokeRepository = pokeRepository;
     }
-    public Optional<ServiceModel> getService(long id){
-        return serviceRepository.findById(id);
+    public List<ServiceModel> getAllServicesByName(String userName){
+        return serviceRepository.findAllByUserName(userName);
     }
 
     public void saveService(ServiceModel user) {
@@ -36,7 +50,23 @@ public class Service {
 
     }
 
-    public ServiceModel createService(ServiceModel service) {
+    public ServiceModel createService(ServiceModel service,String userName) {
+    Optional<Customer> cu= customerRepository.findCustomerByUserName(userName);
+    Optional<Provider> pr= providerRepository.findByUserName(userName);
+    if(cu.isPresent()){
+            Customer c1=cu.get();
+            System.out.println(userName + " :  exits ");
+            c1.getServiceModels().add(service);
+            service.setCustomer(c1);
+            System.out.println("hhhh");
+    }
+    else if (pr.isPresent()){
+        Provider p1=pr.get();
+        System.out.println(userName + " :  exits ");
+        p1.getServiceModels().add(service);
+//        service.setProvider(p1);
+    }
+    else System.out.println(userName + " : doesnt exits ");
     serviceRepository.save(service);
     return service;
     }
@@ -48,6 +78,15 @@ public class Service {
             return "Service deleted";
         }
         return "Service not found";
+    }
+
+    public List<ServiceModel> getAllServices() {
+        return serviceRepository.findAllByPoke(Boolean.FALSE);
+    }
+
+
+    public Poke tryTopokeService(Poke poke) {
+        return pokeRepository.save(poke);
     }
 }
 

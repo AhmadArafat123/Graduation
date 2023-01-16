@@ -5,9 +5,9 @@ import com.test.testpro.model.Customer;
 import com.test.testpro.model.Note;
 import com.test.testpro.service.CustomerService;
 import com.test.testpro.service.FirebaseMessagingService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -20,14 +20,14 @@ public class CustomerController {
         this.customerService = customerService;
         this.firebaseMessagingService=firebaseMessagingService;
     }
-    @GetMapping(value = "/getCustomer/{id}")
-    public Optional<Customer> getUserById(@PathVariable long id){
-        return customerService.getUser(id);
+    @GetMapping(value = "/getCustomer/{email}/{password}")
+    public Optional<Customer> getUserById(@PathVariable String email,@PathVariable String password){
+        return customerService.getUser(email,password);
     }
 
     @PostMapping(value = "/createCustomer/")
-    public Customer createUser(@RequestBody Customer user){
-        return customerService.createUser(user);
+    public ResponseEntity createUser(@RequestBody Customer user){
+        return ResponseEntity.ok(customerService.createUser(user));
     }
 
     @DeleteMapping(value = "/deleteCustomer/{id}")

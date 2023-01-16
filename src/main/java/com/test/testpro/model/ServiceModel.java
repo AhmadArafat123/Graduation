@@ -1,30 +1,32 @@
 package com.test.testpro.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import java.sql.Time;
-import java.time.LocalTime;
+import javax.persistence.*;
+import java.util.Set;
+
 
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
 @RequiredArgsConstructor
+
 public class ServiceModel {
     @Id
     @GeneratedValue
     private Long id;
+
+
+
     @NonNull
-    private String name;
+    private String userName;
     @NonNull
     private String type;
     @NonNull
-    private double minPrice;
-    @NonNull
-    private double maxPrice;
+    private boolean poke;
+
 
     @NonNull
     private String time;
@@ -35,5 +37,15 @@ public class ServiceModel {
     private double price;
     @NonNull
     private String quality;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "provide_id")
+    private Provider provider;
 }
 
