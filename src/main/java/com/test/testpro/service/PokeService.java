@@ -87,6 +87,10 @@ public class PokeService {
         return pokeRepository.save(poke);
     }
 
+    public Poke forcePokeService(Poke poke) {
+        poke.setStatus("accepted");
+        return pokeRepository.save(poke);
+    }
 }
 
 

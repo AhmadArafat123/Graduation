@@ -12,6 +12,7 @@ import java.util.Optional;
 @Repository
 public interface ProviderRepository extends JpaRepository<Provider,Long> {
 
+    List<Provider> findAllByAvailability(boolean av);
     Optional<Provider> findByUserName(String name);
     Optional<Provider> findProviderByPhoneNum(String phoneNum);
     Optional<Provider> findProviderByEmail(String userName);

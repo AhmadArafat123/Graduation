@@ -1,9 +1,6 @@
 package com.test.testpro.service;
 
-import com.test.testpro.model.Customer;
-import com.test.testpro.model.Poke;
-import com.test.testpro.model.Provider;
-import com.test.testpro.model.ServiceModel;
+import com.test.testpro.model.*;
 import com.test.testpro.repository.CustomerRepository;
 import com.test.testpro.repository.PokeRepository;
 import com.test.testpro.repository.ProviderRepository;
@@ -13,6 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,14 +82,38 @@ public class Service {
         return serviceRepository.findAllByCustomer(null);
     }
 
-
-    public Poke tryTopokeService(Poke poke) {
-        return pokeRepository.save(poke);
-    }
-
     public List<ServiceModel> getAllServicesForProvider() {
         return serviceRepository.findAllByProvider(null);
     }
+
+    public List<ServiceModel> find(Search search){
+        double servicePrice=0;
+        double serviceQuality=0;
+        double quality=search.getQuality();
+        double price=search.getPrice();
+        double distance=0;
+        float longtid=search.getLongtid();
+        float lati=search.getLati();
+        System.out.println(search.getAvailable()+"-------");
+        List<Provider> providers=providerRepository.findAllByAvailability(search.getAvailable());
+        ArrayList<ServiceModel> serviceModels= new ArrayList<ServiceModel>();
+        for(Provider p : providers) {
+
+            ServiceModel serviceModel = serviceRepository.findByProviderAndServiceName(p,search.getType());
+            serviceModels.add(serviceModel);
+        }
+        ArrayList<ServiceModel> serviceModelsAfterFiltering= new ArrayList<ServiceModel>();
+        for (ServiceModel serviceModel:serviceModels){
+            servicePrice=serviceModel.getPrice();
+            serviceQuality=Double.parseDouble(serviceModel.getQuality());
+            if(Math.abs(price-servicePrice)<25 && Math.abs(quality-serviceQuality)<3) {
+                serviceModelsAfterFiltering.add(serviceModel);
+                distance=Math.sqrt((Math.pow(serviceModel.getLongtid()-longtid,2))+(Math.pow(serviceModel.getLati()-lati,2)));
+            }
+        }
+    return serviceModelsAfterFiltering;
+    }
+
 }
 
 

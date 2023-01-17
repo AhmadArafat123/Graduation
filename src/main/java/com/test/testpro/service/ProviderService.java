@@ -2,13 +2,17 @@ package com.test.testpro.service;
 
 import com.test.testpro.exception.ApiRequestException;
 import com.test.testpro.model.Provider;
+import com.test.testpro.model.ServiceModel;
 import com.test.testpro.repository.ProviderRepository;
+import com.test.testpro.repository.ServiceRepository;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,8 +21,10 @@ import java.util.Optional;
 @Transactional(isolation = Isolation.SERIALIZABLE)
 public class ProviderService {
     private final ProviderRepository providerRepository;
-    public ProviderService(ProviderRepository providerRepository) {
+    private final ServiceRepository serviceRepository;
+    public ProviderService(ProviderRepository providerRepository, ServiceRepository serviceRepository) {
         this.providerRepository = providerRepository;
+        this.serviceRepository = serviceRepository;
     }
     public void save(com.test.testpro.model.Provider provider) {
         providerRepository.save(provider);
@@ -60,16 +66,6 @@ public class ProviderService {
         }
         return p;
     }
-//    public List<Provider> find(Boolean av, String type, int quality, int price){
-//        List<Provider> providers=providerRepository.findAllByAvailabilityAndTypeOfService(av,type);
-//        ArrayList<Integer> q = new ArrayList<Integer>();
-//        ArrayList<Integer> p=new ArrayList<Integer>();
-//
-//        for (int i = 0 ; i < providers.size();i++){
-//            q.add(providers.get(i).getQuality());
-//
-//        }
-    //}
 }
 
 

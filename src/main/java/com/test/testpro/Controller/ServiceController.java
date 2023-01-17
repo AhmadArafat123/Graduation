@@ -1,6 +1,7 @@
 package com.test.testpro.Controller;
 
 import com.test.testpro.model.Poke;
+import com.test.testpro.model.Search;
 import com.test.testpro.model.ServiceModel;
 import com.test.testpro.service.Service;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +25,18 @@ public class ServiceController {
     public List<ServiceModel> getAllService() {
         return service.getAllServices();
     }
+
     @GetMapping(value = "/getAllServices/provider")
     public List<ServiceModel> getAllServicesForProvider() {
         return service.getAllServicesForProvider();
     }
+
+
+    @GetMapping(value = "/find")
+    public List<ServiceModel> find(@RequestBody Search search) {
+        return service.find(search);
+    }
+
 
 
     @PostMapping(value = "/createService")

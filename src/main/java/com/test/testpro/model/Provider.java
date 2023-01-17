@@ -29,7 +29,7 @@ public class Provider {
     private String city;
     /////////////////
     @NonNull
-    private Boolean availability;
+    private boolean availability;
     @NonNull
     private String typeOfService;
     @NonNull

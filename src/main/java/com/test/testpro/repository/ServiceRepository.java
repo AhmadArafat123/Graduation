@@ -15,5 +15,6 @@ public interface ServiceRepository extends JpaRepository<ServiceModel,Long> {
     List<ServiceModel> findAllByPoke(boolean poke);
     List<ServiceModel> findAllByCustomer(Customer customer);
     List<ServiceModel> findAllByProvider(Provider provider);
+    ServiceModel findByProviderAndServiceName(Provider p , String name);
 
 }
