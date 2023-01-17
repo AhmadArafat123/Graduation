@@ -22,6 +22,9 @@ public class Poke {
     @NonNull
     private String nameOfCustomer;
     @NonNull
+    private Long idOfServic;
+
+    @NonNull
     private float longtid;
     @NonNull
     private float lati;

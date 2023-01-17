@@ -1,8 +1,6 @@
 package com.test.testpro.service;
 
-import com.test.testpro.model.Customer;
 import com.test.testpro.model.Poke;
-import com.test.testpro.model.Provider;
 import com.test.testpro.model.ServiceModel;
 import com.test.testpro.repository.CustomerRepository;
 import com.test.testpro.repository.PokeRepository;
@@ -88,7 +86,8 @@ public class PokeService {
     }
 
 
-    public Poke tryTopokeService(Poke poke) {
+    public Poke tryTopokeService(Poke poke, long idOfService) {
+        poke.setIdOfServic(idOfService);
         poke.setStatus("pending");
         return pokeRepository.save(poke);
     }

@@ -29,8 +29,8 @@ public class PokeController {
     }
 
     @PostMapping(value = "/tryToPokeServie")
-    public Poke tryToPokeService(@RequestBody Poke poke){
-        return service.tryTopokeService(poke);
+    public Poke tryToPokeService(@RequestBody Poke poke,@RequestParam long idOfService){
+        return service.tryTopokeService(poke,idOfService);
     }
 
     @PostMapping(value = "/accepteServie/{id}")
