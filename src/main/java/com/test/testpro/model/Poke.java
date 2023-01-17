@@ -23,7 +23,8 @@ public class Poke {
     private String nameOfCustomer;
     @NonNull
     private Long idOfServic;
-
+    @NonNull
+    private Long nameOfService;
     @NonNull
     private float longtid;
     @NonNull

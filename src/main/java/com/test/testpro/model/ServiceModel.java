@@ -24,8 +24,6 @@ public class ServiceModel {
     @NonNull
     private String description;
     @NonNull
-    private String type;
-    @NonNull
     private boolean poke;
     @NonNull
     private double price;

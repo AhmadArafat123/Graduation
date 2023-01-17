@@ -20,7 +20,7 @@ import java.util.Optional;
 @Transactional(isolation = Isolation.SERIALIZABLE)
 public class PokeService {
 
-        private final ServiceRepository serviceRepository;
+    private final ServiceRepository serviceRepository;
     private final CustomerRepository customerRepository;
     private final ProviderRepository providerRepository;
     private final PokeRepository pokeRepository;
@@ -47,28 +47,6 @@ public class PokeService {
         }
 
     }
-
-//    public ServiceModel createService(ServiceModel service,String phoneNum) {
-//    Optional<Customer> cu= customerRepository.findCustomerByPhoneNum(phoneNum);
-//    Optional<Provider> pr= providerRepository.findProviderByPhoneNum(phoneNum);
-//    if(cu.isPresent()){
-//            Customer c1=cu.get();
-//            System.out.println(phoneNum + " :  exits ");
-//            c1.getServiceModels().add(service);
-//            service.setCustomer(c1);
-//            System.out.println("hhhh");
-//    }
-//    else if (pr.isPresent()){
-//        Provider p1=pr.get();
-//        System.out.println(phoneNum + " :  exits ");
-//        p1.getServiceModels().add(service);
-////        service.setProvider(p1);
-//    }
-//    else System.out.println(phoneNum + " : doesnt exits ");
-//    serviceRepository.save(service);
-//    return service;
-//    }
-
     public String deleteService(long id) {
         Optional<ServiceModel> service=serviceRepository.findById(id);
         if (service.isPresent()){
@@ -77,17 +55,13 @@ public class PokeService {
         }
         return "Service not found";
     }
-
     public List<Poke> getAllPoks(String userName) {
         return pokeRepository.findAllByServiceUserName(userName);
     }
     public List<Poke> getAllPoksForCustomer(String userName) {
         return pokeRepository.findAllByNameOfCustomer(userName);
     }
-
-
-    public Poke tryTopokeService(Poke poke, long idOfService) {
-        poke.setIdOfServic(idOfService);
+    public Poke tryTopokeService(Poke poke) {
         poke.setStatus("pending");
         return pokeRepository.save(poke);
     }
