@@ -32,7 +32,8 @@ public class PokeService {
 
         this.pokeRepository = pokeRepository;
     }
-    public Optional<ServiceModel> getService(long id){
+
+    public Optional<ServiceModel> getService(long id) {
         return serviceRepository.findById(id);
     }
 
@@ -42,52 +43,58 @@ public class PokeService {
 
     public void updateService(long id) {
         Optional<ServiceModel> user = serviceRepository.findById(id);
-        if(user.isPresent()){
+        if (user.isPresent()) {
             ServiceModel u = user.get();
         }
 
     }
+
     public String deleteService(long id) {
-        Optional<ServiceModel> service=serviceRepository.findById(id);
-        if (service.isPresent()){
+        Optional<ServiceModel> service = serviceRepository.findById(id);
+        if (service.isPresent()) {
             serviceRepository.delete(service.get());
             return "Service deleted";
         }
         return "Service not found";
     }
+
     public List<Poke> getAllPoks(String userName) {
         return pokeRepository.findAllByServiceUserName(userName);
     }
+
     public List<Poke> getAllPoksForCustomer(String userName) {
         return pokeRepository.findAllByNameOfCustomer(userName);
     }
+
     public Poke tryTopokeService(Poke poke) {
         poke.setStatus("pending");
         return pokeRepository.save(poke);
     }
 
-    public Poke pokeService(long id ) {
-        Optional<Poke> p=pokeRepository.findById(id);
-        Poke poke=p.get();
+    public Poke pokeService(long id) {
+        Optional<Poke> p = pokeRepository.findById(id);
+        Poke poke = p.get();
         poke.setStatus("accepted");
         return pokeRepository.save(poke);
     }
 
-    public Poke rejectService(long id ) {
-        Optional<Poke> p=pokeRepository.findById(id);
-        Poke poke=p.get();
+    public Poke rejectService(long id) {
+        Optional<Poke> p = pokeRepository.findById(id);
+        Poke poke = p.get();
         poke.setStatus("rejected");
         return pokeRepository.save(poke);
     }
 
-    public Poke completeService(long id ) {
-        Optional<Poke> p=pokeRepository.findById(id);
-        Poke poke=p.get();
+    public Poke completeService(long id) {
+        Optional<Poke> p = pokeRepository.findById(id);
+        Poke poke = p.get();
         poke.setStatus("completed");
         return pokeRepository.save(poke);
     }
 
     public Poke forcePokeService(Poke poke) {
+        Optional<ServiceModel> serviceModel = serviceRepository.findById(poke.getIdOfService());
+        serviceRepository.delete(serviceModel.get());
         poke.setStatus("accepted");
         return pokeRepository.save(poke);
     }

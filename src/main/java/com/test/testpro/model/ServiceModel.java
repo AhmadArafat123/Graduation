@@ -33,10 +33,10 @@ public class ServiceModel {
     private float lati;
     @NonNull
     private String quality;
-
     @NonNull
     private String time;
-
+    @NonNull
+    private boolean available;
 
 
     @JsonIgnore

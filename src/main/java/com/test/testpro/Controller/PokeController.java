@@ -13,8 +13,9 @@ import java.util.Optional;
 @RequestMapping("/poke")
 public class PokeController {
     PokeService service;
+
     public PokeController(PokeService service) {
-        this.service =  service;
+        this.service = service;
     }
 
 
@@ -24,32 +25,34 @@ public class PokeController {
     }
 
     @GetMapping(value = "/getAllPokes/customer")
-    public List<Poke> getAllPoksForCustomer(@RequestParam  String customerName) {
+    public List<Poke> getAllPoksForCustomer(@RequestParam String customerName) {
         return service.getAllPoksForCustomer(customerName);
     }
 
     @PostMapping(value = "/tryToPokeServie")
-        public Poke tryToPokeService(@RequestBody Poke poke ){
+    public Poke tryToPokeService(@RequestBody Poke poke) {
         return service.tryTopokeService(poke);
     }
+
     @PostMapping(value = "/forcePokeService")
-    public Poke forcePokeService(@RequestBody Poke poke ){
+    public Poke forcePokeService(@RequestBody Poke poke) {
         return service.forcePokeService(poke);
     }
 
     @PostMapping(value = "/accepteServie/{id}")
-    public Poke pokeService(@PathVariable long id){
+    public Poke pokeService(@PathVariable long id) {
         return service.pokeService(id);
     }
+
     @PostMapping(value = "/rejectServie/{id}")
-    public Poke rejectService(@PathVariable long id){
+    public Poke rejectService(@PathVariable long id) {
         return service.rejectService(id);
     }
+
     @PostMapping(value = "/completeService/{id}")
-    public Poke completedService(@PathVariable long id){
+    public Poke completedService(@PathVariable long id) {
         return service.completeService(id);
     }
-
 
 
 }

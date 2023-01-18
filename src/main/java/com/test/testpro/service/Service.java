@@ -1,6 +1,9 @@
 package com.test.testpro.service;
 
-import com.test.testpro.model.*;
+import com.test.testpro.model.Customer;
+import com.test.testpro.model.Provider;
+import com.test.testpro.model.Search;
+import com.test.testpro.model.ServiceModel;
 import com.test.testpro.repository.CustomerRepository;
 import com.test.testpro.repository.PokeRepository;
 import com.test.testpro.repository.ProviderRepository;
@@ -20,7 +23,7 @@ import java.util.Optional;
 @Transactional(isolation = Isolation.SERIALIZABLE)
 public class Service {
 
-        private final ServiceRepository serviceRepository;
+    private final ServiceRepository serviceRepository;
     private final CustomerRepository customerRepository;
     private final ProviderRepository providerRepository;
     private final PokeRepository pokeRepository;
@@ -32,7 +35,8 @@ public class Service {
 
         this.pokeRepository = pokeRepository;
     }
-    public List<ServiceModel> getAllServicesByName(String userName){
+
+    public List<ServiceModel> getAllServicesByName(String userName) {
         return serviceRepository.findAllByUserName(userName);
     }
 
@@ -42,43 +46,42 @@ public class Service {
 
     public void updateService(long id) {
         Optional<ServiceModel> user = serviceRepository.findById(id);
-        if(user.isPresent()){
+        if (user.isPresent()) {
             ServiceModel u = user.get();
         }
 
     }
 
-    public ServiceModel createService(ServiceModel service,String userName) {
-    Optional<Customer> cu= customerRepository.findCustomerByUserName(userName);
-    Optional<Provider> pr= providerRepository.findByUserName(userName);
-    if(cu.isPresent()){
-            Customer c1=cu.get();
+    public ServiceModel createService(ServiceModel service, String userName) {
+        Optional<Customer> cu = customerRepository.findCustomerByUserName(userName);
+        Optional<Provider> pr = providerRepository.findByUserName(userName);
+        if (cu.isPresent()) {
+            Customer c1 = cu.get();
             System.out.println(userName + " :  exits ");
             c1.getServiceModels().add(service);
             service.setCustomer(c1);
-    }
-    else if (pr.isPresent()){
-        Provider p1=pr.get();
-        System.out.println(userName + " :  exits ");
-        p1.getServiceModels().add(service);
-        service.setQuality(p1.getQuality());
-        service.setProvider(p1);
-    }
-    else System.out.println(userName + " : doesnt exits ");
-    serviceRepository.save(service);
-    return service;
+        } else if (pr.isPresent()) {
+            Provider p1 = pr.get();
+            System.out.println(userName + " :  exits ");
+            p1.getServiceModels().add(service);
+            service.setQuality(p1.getQuality());
+            service.setAvailable(p1.isAvailability());
+            service.setProvider(p1);
+        } else System.out.println(userName + " : doesnt exits ");
+        serviceRepository.save(service);
+        return service;
     }
 
     public String deleteService(long id) {
-        Optional<ServiceModel> service=serviceRepository.findById(id);
-        if (service.isPresent()){
+        Optional<ServiceModel> service = serviceRepository.findById(id);
+        if (service.isPresent()) {
             serviceRepository.delete(service.get());
             return "Service deleted";
         }
         return "Service not found";
     }
 
-    public List<ServiceModel> getAllServices() {
+    public List<ServiceModel> getAllServicesForCustomer() {
         return serviceRepository.findAllByCustomer(null);
     }
 
@@ -86,34 +89,55 @@ public class Service {
         return serviceRepository.findAllByProvider(null);
     }
 
-    public List<ServiceModel> find(Search search){
-        double servicePrice=0;
-        double serviceQuality=0;
-        double quality=search.getQuality();
-        double price=search.getPrice();
-        double distance=0;
-        float longtid=search.getLongtid();
-        float lati=search.getLati();
-        System.out.println(search.getAvailable()+"-------");
-        List<Provider> providers=providerRepository.findAllByAvailability(search.getAvailable());
-        ArrayList<ServiceModel> serviceModels= new ArrayList<ServiceModel>();
-        for(Provider p : providers) {
+    public List<ServiceModel> find(Search search) {
+        double servicePrice = 0;
+        double serviceQuality = 0;
+        double quality = search.getQuality();
+        double price = search.getPrice();
+        double distance = 0;
+        float longtid = search.getLongtid();
+        float lati = search.getLati();
+        System.out.println(search.getAvailable() + "-------");
+        if (price == 0) {
 
-            ServiceModel serviceModel = serviceRepository.findByProviderAndServiceName(p,search.getType());
+        }
+
+        List<Provider> providers = providerRepository.findAllByAvailability(search.getAvailable());
+        ArrayList<ServiceModel> serviceModels = new ArrayList<ServiceModel>();
+        for (Provider p : providers) {
+
+            ServiceModel serviceModel = serviceRepository.findByProviderAndServiceName(p, search.getType());
             serviceModels.add(serviceModel);
         }
-        ArrayList<ServiceModel> serviceModelsAfterFiltering= new ArrayList<ServiceModel>();
-        for (ServiceModel serviceModel:serviceModels){
-            servicePrice=serviceModel.getPrice();
-            serviceQuality=Double.parseDouble(serviceModel.getQuality());
-            if(Math.abs(price-servicePrice)<25 && Math.abs(quality-serviceQuality)<3) {
-                serviceModelsAfterFiltering.add(serviceModel);
-                distance=Math.sqrt((Math.pow(serviceModel.getLongtid()-longtid,2))+(Math.pow(serviceModel.getLati()-lati,2)));
+        ArrayList<ServiceModel> serviceModelsAfterFiltering = new ArrayList<ServiceModel>();
+        if (price == 0) {
+            for (ServiceModel serviceModel : serviceModels) {
+                serviceQuality = Double.parseDouble(serviceModel.getQuality());
+                if (Math.abs(quality - serviceQuality) < 3) {
+                    serviceModelsAfterFiltering.add(serviceModel);
+                    distance = Math.sqrt((Math.pow(serviceModel.getLongtid() - longtid, 2)) + (Math.pow(serviceModel.getLati() - lati, 2)));
+                }
+            }
+        } else {
+            for (ServiceModel serviceModel : serviceModels) {
+                servicePrice = serviceModel.getPrice();
+                serviceQuality = Double.parseDouble(serviceModel.getQuality());
+                if (Math.abs(price - servicePrice) < 25 && Math.abs(quality - serviceQuality) < 3) {
+                    serviceModelsAfterFiltering.add(serviceModel);
+                    distance = Math.sqrt((Math.pow(serviceModel.getLongtid() - longtid, 2)) + (Math.pow(serviceModel.getLati() - lati, 2)));
+                }
             }
         }
-    return serviceModelsAfterFiltering;
+        return serviceModelsAfterFiltering;
     }
 
+    public void deleteService(ServiceModel serviceModel) {
+        serviceRepository.delete(serviceModel);
+    }
+
+    public List<ServiceModel> getAllServices() {
+        return serviceRepository.findAll();
+    }
 }
 
 

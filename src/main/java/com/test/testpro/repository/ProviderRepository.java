@@ -13,6 +13,7 @@ import java.util.Optional;
 public interface ProviderRepository extends JpaRepository<Provider,Long> {
 
     List<Provider> findAllByAvailability(boolean av);
+    List<Provider> findAllByApproved(boolean approved);
     Optional<Provider> findByUserName(String name);
     Optional<Provider> findProviderByPhoneNum(String phoneNum);
     Optional<Provider> findProviderByEmail(String userName);

@@ -29,7 +29,7 @@ public class DatabaseLoader implements CommandLineRunner {
         Customer Ahmad = new Customer("Ahmad","arafat.2000@live.com","Nablus","Good","0595264544");
         Customer Haitham = new Customer("mo","haitam.2000@live.com","Nablus","Good","0597169849");
         Customer Adnan = new Customer("Adnan","Adnan.2000@live.com","Nablus","Good","0000");
-        Provider Qais=new Provider("Qais","qais.2000@live.com","Nablus",true,"doctor","5","000000","55555");
+        Provider Qais=new Provider("Qais","qais.2000@live.com","Nablus",true,"doctor","5","000000","55555","dog",false);
 
 //        ServiceModel Shoubi=new ServiceModel("Shoubi","Doctor",0,20,  "11:00","Nablus",100,"Good");
 

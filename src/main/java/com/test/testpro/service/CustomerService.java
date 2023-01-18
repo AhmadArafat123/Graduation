@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,28 +18,33 @@ import java.util.Optional;
 @Transactional(isolation = Isolation.SERIALIZABLE)
 public class CustomerService {
 
-    private final CustomerRepository userRepository;
+    private final CustomerRepository customerRepository;
 
-    public CustomerService(CustomerRepository userRepository ) {
-        this.userRepository = userRepository;
+    public CustomerService(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
     }
-    public Optional<Customer> getUser(String email,String password){
-       Optional<Customer> c=  userRepository.findByEmail(email);
-       if(!c.isPresent() || !password.equalsIgnoreCase(c.get().getPassword())){
-            throw new ApiRequestException("Error email or password is wrong");
-       }
 
-           return c;
+    public List<Customer> getAllCustomers() {
+        return customerRepository.findAll();
+    }
+
+    public Optional<Customer> getUser(String email, String password) {
+        Optional<Customer> c = customerRepository.findByEmail(email);
+        if (!c.isPresent() || !password.equalsIgnoreCase(c.get().getPassword())) {
+            throw new ApiRequestException("Error email or password is wrong");
+        }
+
+        return c;
 
     }
 
     public void save(Customer user) {
-        userRepository.save(user);
+        customerRepository.save(user);
     }
 
     public void updateUser(long id) {
-        Optional<Customer> user = userRepository.findById(id);
-        if(user.isPresent()){
+        Optional<Customer> user = customerRepository.findById(id);
+        if (user.isPresent()) {
             Customer u = user.get();
             u.setCity("Nablus");
 
@@ -46,14 +52,14 @@ public class CustomerService {
     }
 
     public Boolean createUser(Customer user) {
-        userRepository.save(user);
+        customerRepository.save(user);
         return true;
     }
 
     public String deleteUser(long id) {
-        Optional<Customer> user=userRepository.findById(id);
-        if (user.isPresent()){
-            userRepository.delete(user.get());
+        Optional<Customer> user = customerRepository.findById(id);
+        if (user.isPresent()) {
+            customerRepository.delete(user.get());
             return "User deleted";
         }
         return "User not found";

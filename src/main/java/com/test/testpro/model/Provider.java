@@ -2,7 +2,6 @@ package com.test.testpro.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,12 +32,17 @@ public class Provider {
     @NonNull
     private String typeOfService;
     @NonNull
-        private String quality;
+    private String quality;
     ///////////////////////////////
     @NonNull
     private String phoneNum;
     @NonNull
     private String password;
+    @NonNull
+    private String qualifications;
+    @NonNull
+    private boolean approved;
+
 
     @JsonIgnore
     @OneToMany(mappedBy="provider")
