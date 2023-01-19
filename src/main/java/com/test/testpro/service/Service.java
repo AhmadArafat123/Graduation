@@ -107,6 +107,7 @@ public class Service {
         for (Provider p : providers) {
 
             ServiceModel serviceModel = serviceRepository.findByProviderAndServiceName(p, search.getType());
+            if(serviceModel!=null)
             serviceModels.add(serviceModel);
         }
         ArrayList<ServiceModel> serviceModelsAfterFiltering = new ArrayList<ServiceModel>();
