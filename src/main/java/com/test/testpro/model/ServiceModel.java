@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Set;
 
 
 @Entity
@@ -13,7 +12,7 @@ import java.util.Set;
 @Setter
 @RequiredArgsConstructor
 
-public class ServiceModel {
+public class ServiceModel implements Comparable<ServiceModel> {
     @Id
     @GeneratedValue
     private Long id;
@@ -38,6 +37,8 @@ public class ServiceModel {
     @NonNull
     private boolean available;
 
+    @NonNull
+    private Double knn;
 
     @JsonIgnore
     @ManyToOne
@@ -48,5 +49,10 @@ public class ServiceModel {
     @ManyToOne
     @JoinColumn(name = "provide_id")
     private Provider provider;
+
+    @Override
+    public int compareTo(ServiceModel o) {
+        return 0;
+    }
 }
 

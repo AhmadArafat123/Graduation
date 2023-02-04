@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ServiceRepository extends JpaRepository<ServiceModel,Long> {
@@ -16,5 +17,6 @@ public interface ServiceRepository extends JpaRepository<ServiceModel,Long> {
     List<ServiceModel> findAllByCustomer(Customer customer);
     List<ServiceModel> findAllByProvider(Provider provider);
     ServiceModel findByProviderAndServiceName(Provider p , String name);
+    Optional<List<ServiceModel>> findByProvider(Provider p);
 
 }

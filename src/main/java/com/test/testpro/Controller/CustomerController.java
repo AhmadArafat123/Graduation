@@ -3,6 +3,7 @@ package com.test.testpro.Controller;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.test.testpro.model.Customer;
 import com.test.testpro.model.Note;
+import com.test.testpro.model.Rate;
 import com.test.testpro.service.CustomerService;
 import com.test.testpro.service.FirebaseMessagingService;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +26,16 @@ public class CustomerController {
     public Optional<Customer> getUserById(@PathVariable String email, @PathVariable String password) {
         return customerService.getUser(email, password);
     }
+    @GetMapping(value = "/ForgetPassword/{email}/")
+    public String getUserById(@PathVariable String email) {
+        return customerService.ForgetPassword(email);
+    }
 
     @PostMapping(value = "/createCustomer/")
     public ResponseEntity createUser(@RequestBody Customer user) {
         return ResponseEntity.ok(customerService.createUser(user));
     }
+
 
     @DeleteMapping(value = "/deleteCustomer/{id}")
     public String deleteUser(@PathVariable long id) {

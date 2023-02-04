@@ -2,8 +2,10 @@ package com.test.testpro.service;
 
 import com.test.testpro.exception.ApiRequestException;
 import com.test.testpro.model.Provider;
+import com.test.testpro.model.Rate;
 import com.test.testpro.model.ServiceModel;
 import com.test.testpro.repository.ProviderRepository;
+import com.test.testpro.repository.RateRepository;
 import com.test.testpro.repository.ServiceRepository;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.stereotype.Service;
@@ -21,10 +23,12 @@ import java.util.Optional;
 public class ProviderService {
     private final ProviderRepository providerRepository;
     private final ServiceRepository serviceRepository;
+    private final RateRepository rateRepository;
 
-    public ProviderService(ProviderRepository providerRepository, ServiceRepository serviceRepository) {
+    public ProviderService(ProviderRepository providerRepository, ServiceRepository serviceRepository, RateRepository rateRepository) {
         this.providerRepository = providerRepository;
         this.serviceRepository = serviceRepository;
+        this.rateRepository = rateRepository;
     }
 
     public void save(com.test.testpro.model.Provider provider) {
@@ -54,7 +58,13 @@ public class ProviderService {
     }
 
     public Provider createProvider(Provider provider) {
+        String name= provider.getUserName();
+        Optional<Provider> provider1=providerRepository.findByUserName(name);
+        if(provider1.isPresent()){
+            throw new ApiRequestException("This is a used userName Please Enter another");
+        }
         provider.setAvailability(false);
+
         providerRepository.save(provider);
         return provider;
     }
@@ -86,6 +96,26 @@ public class ProviderService {
 
     public List<Provider> getAllRequests() {
         return providerRepository.findAllByApproved(false);
+    }
+
+
+    public String rateProvider(Rate rate) {
+        Optional<Provider> p=providerRepository.findByUserName(rate.getProviderUserName());
+        if(!p.isPresent()) {
+            throw new ApiRequestException("Invalide rate");
+        }
+            Provider p1=p.get();
+            rateRepository.save(rate);
+            Integer quality = Integer.parseInt(p1.getQuality());
+            List<Rate> rateList = rateRepository.findAllByProviderUserName(rate.getProviderUserName());
+            Integer size=1;
+            for (Rate rate1 : rateList) {
+                quality +=Integer.parseInt(rate1.getQuality());
+                size++;
+            }
+            quality=quality/size;
+            p1.setQuality(quality.toString());
+            return quality.toString();
     }
 }
 

@@ -2,6 +2,7 @@ package com.test.testpro.Controller;
 
 import com.test.testpro.model.Customer;
 import com.test.testpro.model.Provider;
+import com.test.testpro.model.Rate;
 import com.test.testpro.service.ProviderService;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +35,10 @@ public class ProviderController {
     @PostMapping(value = "/createProvider")
     public com.test.testpro.model.Provider createProvider(@RequestBody com.test.testpro.model.Provider provider) {
         return this.providerService.createProvider(provider);
+    }
+    @PostMapping(value = "/rateProvider/")
+    public String rate(@RequestBody Rate rate) {
+        return providerService.rateProvider(rate);
     }
 
     @DeleteMapping(value = "/deleteProvider/{id}")

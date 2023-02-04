@@ -13,9 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @org.springframework.stereotype.Service
 @EnableTransactionManagement
@@ -94,9 +92,12 @@ public class Service {
         double serviceQuality = 0;
         double quality = search.getQuality();
         double price = search.getPrice();
-        double distance = 0;
+        Double knn = 0.0;
         float longtid = search.getLongtid();
         float lati = search.getLati();
+        String type=search.getType().toLowerCase();
+        List<ServiceModel> serviceModelList;
+
         System.out.println(search.getAvailable() + "-------");
         if (price == 0) {
 
@@ -105,30 +106,53 @@ public class Service {
         List<Provider> providers = providerRepository.findAllByAvailability(search.getAvailable());
         ArrayList<ServiceModel> serviceModels = new ArrayList<ServiceModel>();
         for (Provider p : providers) {
-
-            ServiceModel serviceModel = serviceRepository.findByProviderAndServiceName(p, search.getType());
-            if(serviceModel!=null)
-            serviceModels.add(serviceModel);
+            Optional<List<ServiceModel>> optionalServiceModelList=serviceRepository.findByProvider(p);
+            if(optionalServiceModelList.isPresent()) {
+                serviceModelList=optionalServiceModelList.get();
+                for (ServiceModel serviceModel:serviceModelList)
+                if (serviceModel.getServiceName().toLowerCase().contains(type)) {
+                    serviceModels.add(serviceModel);
+                }
+            }
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////
         ArrayList<ServiceModel> serviceModelsAfterFiltering = new ArrayList<ServiceModel>();
         if (price == 0) {
             for (ServiceModel serviceModel : serviceModels) {
                 serviceQuality = Double.parseDouble(serviceModel.getQuality());
-                if (Math.abs(quality - serviceQuality) < 3) {
-                    serviceModelsAfterFiltering.add(serviceModel);
-                    distance = Math.sqrt((Math.pow(serviceModel.getLongtid() - longtid, 2)) + (Math.pow(serviceModel.getLati() - lati, 2)));
-                }
+                serviceModelsAfterFiltering.add(serviceModel);
+                    knn = Math.sqrt(
+                            (Math.pow(serviceModel.getLongtid() - longtid, 2)) +
+                            (Math.pow(serviceModel.getLati() - lati, 2))+
+                                    (Math.pow(serviceQuality - quality, 2)
+                    ));
+                    serviceModel.setKnn(knn);
             }
-        } else {
+        }
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        else {
             for (ServiceModel serviceModel : serviceModels) {
                 servicePrice = serviceModel.getPrice();
                 serviceQuality = Double.parseDouble(serviceModel.getQuality());
-                if (Math.abs(price - servicePrice) < 25 && Math.abs(quality - serviceQuality) < 3) {
                     serviceModelsAfterFiltering.add(serviceModel);
-                    distance = Math.sqrt((Math.pow(serviceModel.getLongtid() - longtid, 2)) + (Math.pow(serviceModel.getLati() - lati, 2)));
+                    knn = Math.sqrt(
+                            (Math.pow(serviceModel.getLongtid() - longtid, 2)) +
+                            (Math.pow(serviceModel.getLati() - lati, 2))+
+                            (Math.pow(serviceQuality - quality, 2)+
+                            (Math.pow(servicePrice - price, 2))
+                                    ));
+                serviceModel.setKnn(knn);
                 }
             }
-        }
+//       Collections.sort(serviceModelsAfterFiltering, new Comparator<ServiceModel>(){
+//            public int compare(ServiceModel s1, ServiceModel s2)
+//            {
+//                return s1.getKnn().compareTo(s2.getKnn());
+//            }
+//        });
+        Collections.sort(serviceModelsAfterFiltering , (a1, a2) -> a1.getKnn().compareTo(a2.getKnn()));
+
+
         return serviceModelsAfterFiltering;
     }
 

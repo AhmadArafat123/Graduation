@@ -3,10 +3,7 @@ package com.test.testpro.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -18,9 +15,8 @@ public class Provider {
     @Id
     @GeneratedValue
     private Long id;
-
-
     @NonNull
+    @Column(unique=true)
     private String userName;
     @NonNull
     private String email;

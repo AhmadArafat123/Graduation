@@ -50,6 +50,9 @@ public class AdminService {
     }
 
     public String deleteProvider(long id) {
+        EmailEntity emailEntity = new EmailEntity(providerService.getProvider(id).get().getEmail(),
+                "Thanks for your trust but we are sorry",
+                "Service Provider team",null);
         return providerService.deleteProvider(id);
     }
 
